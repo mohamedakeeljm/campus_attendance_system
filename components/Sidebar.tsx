@@ -13,6 +13,7 @@ import {
   CalendarCheck2,
   UploadCloud,
   KeyRound,
+  Banknote,
 } from 'lucide-react';
 import { AuthUser } from '../lib/auth';
 import { ThemeToggle } from './ThemeToggle';
@@ -23,6 +24,7 @@ interface SidebarProps {
   onOpenEmployeeSettings?: () => void;
   onOpenAttendanceSettings?: () => void;
   onOpenAccountSettings?: () => void;
+  onOpenPayroll?: () => void;
   onOpenUpload?: () => void;
   onResetAll?: () => void;
   hasData?: boolean;
@@ -36,6 +38,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenEmployeeSettings,
   onOpenAttendanceSettings,
   onOpenAccountSettings,
+  onOpenPayroll,
   onOpenUpload,
   onResetAll,
   hasData = false,
@@ -191,6 +194,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
             >
               <KeyRound className="w-3.5 h-3.5 text-amber-400 shrink-0" />
               <span>Admin &amp; SMTP Settings</span>
+            </button>
+          )}
+
+          {/* Payroll (Coming Soon Tab) */}
+          {onOpenPayroll && (
+            <button
+              onClick={() => {
+                onOpenPayroll();
+                setIsMobileOpen(false);
+              }}
+              className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg hover:bg-slate-800/80 text-slate-300 hover:text-white border border-transparent hover:border-slate-700/80 transition text-left text-xs font-medium cursor-pointer group"
+            >
+              <div className="flex items-center space-x-2 min-w-0">
+                <Banknote className="w-3.5 h-3.5 text-emerald-400 shrink-0 group-hover:scale-110 transition-transform" />
+                <span className="font-semibold text-slate-200 group-hover:text-white">Payroll</span>
+              </div>
+              <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 font-extrabold uppercase border border-emerald-500/30 tracking-wider">
+                Soon
+              </span>
             </button>
           )}
 

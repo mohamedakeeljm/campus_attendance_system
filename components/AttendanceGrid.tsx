@@ -19,11 +19,18 @@ import {
   X,
 } from 'lucide-react';
 import { AttendanceCell, AttendancePeriod, EmployeeRecord, StatusCode } from '../lib/types';
+import { calculateStatusFromPunches } from '../lib/statusLogic';
 
 interface AttendanceGridProps {
   period: AttendancePeriod;
   employees: EmployeeRecord[];
-  onCellStatusChange: (employeeId: string, dateKey: string, newStatus: StatusCode, edValue?: number) => void;
+  onCellStatusChange: (
+    employeeId: string,
+    dateKey: string,
+    newStatus: StatusCode,
+    edValue?: number,
+    updatedPunches?: { punchIn?: string; punchOut?: string; durationHours?: number }
+  ) => void;
   onResetCell: (employeeId: string, dateKey: string) => void;
   onUndoLastChange?: () => void;
   canUndo?: boolean;
@@ -70,6 +77,27 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = ({
 
   const popoverRef = useRef<HTMLDivElement>(null);
   const tableScrollRef = useRef<HTMLDivElement>(null);
+  const [popoverClockOut, setPopoverClockOut] = useState('17:00');
+
+  const handleApplyPopoverClockOut = () => {
+    if (!activeCell) return;
+    const inTime = activeCell.cell.punches.punchIn || '08:45';
+    const isSunday = activeCell.cell.dayOfWeek === 'Sun' || activeCell.cell.isWeekend;
+    const result = calculateStatusFromPunches(inTime, popoverClockOut, isSunday);
+
+    onCellStatusChange(
+      activeCell.employeeId,
+      activeCell.dateKey,
+      result.status,
+      result.edValue,
+      {
+        punchIn: inTime,
+        punchOut: popoverClockOut,
+        durationHours: result.durationHours,
+      }
+    );
+    setActiveCell(null);
+  };
 
   const handleScrollLeft = () => {
     if (tableScrollRef.current) {

@@ -70,6 +70,8 @@ export interface AttendancePeriod {
 export interface AttendanceSettings {
   fullDayMinimumHours: number; // Default: 7.0
   halfDayMinimumHours: number; // Default: 3.5
+  officeStartTime?: string; // Default: "08:45"
+  officeEndTime?: string; // Default: "17:00"
   defaultPayrollStartDay: number; // 26
   defaultPayrollEndDay: number; // 25
   autoDetectHolidays: boolean; // Auto-detect weekdays with <= 1 punch across company as holiday

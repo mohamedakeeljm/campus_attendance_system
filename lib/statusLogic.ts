@@ -1,4 +1,5 @@
 import { AttendanceSettings, PunchRecord, StatusCode } from './types';
+import { DEFAULT_ATTENDANCE_SETTINGS } from './defaultMappings';
 
 /**
  * Parse punch cell value into structured timestamps and calculate working hours
@@ -199,5 +200,61 @@ export function determineDailyStatus(params: DetermineStatusParams): StatusResul
     status: 'C',
     isReview: false,
     edValue: 0,
+  };
+}
+
+/**
+ * Automatically calculate status and hours when admin enters clock-out time
+ */
+export function calculateStatusFromPunches(
+  punchInStr: string,
+  punchOutStr: string,
+  isScheduledOffDay: boolean = false,
+  isCompanyHoliday: boolean = false,
+  settings?: AttendanceSettings
+): StatusResult & { durationHours: number } {
+  const inStr = (punchInStr || '').trim();
+  const outStr = (punchOutStr || '').trim();
+  const allPunches = [inStr, outStr].filter(Boolean);
+
+  const toMinutes = (timeStr: string) => {
+    const [h, m] = timeStr.split(':').map(Number);
+    return (isNaN(h) ? 0 : h) * 60 + (isNaN(m) ? 0 : m);
+  };
+
+  let durationHours = 0;
+  if (inStr && outStr) {
+    let diff = toMinutes(outStr) - toMinutes(inStr);
+    if (diff < 0) diff += 24 * 60;
+    durationHours = Math.round((diff / 60) * 100) / 100;
+  }
+
+  const punches: PunchRecord = {
+    punchIn: inStr || null,
+    punchOut: outStr || null,
+    allPunches,
+    rawText: allPunches.join('\n'),
+    durationHours,
+  };
+
+  const defaultSettings: AttendanceSettings = {
+    ...DEFAULT_ATTENDANCE_SETTINGS,
+    fullDayMinimumHours: 7.5,
+    halfDayMinimumHours: 3.5,
+    officeStartTime: '08:45',
+    officeEndTime: '17:00',
+  };
+
+  const result = determineDailyStatus({
+    punches,
+    isScheduledOffDay,
+    isCompanyHoliday,
+    isBeforeJoinDate: false,
+    settings: settings || defaultSettings,
+  });
+
+  return {
+    ...result,
+    durationHours,
   };
 }

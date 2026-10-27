@@ -13,6 +13,7 @@ import { ReviewIssuesDrawer } from '../components/ReviewIssuesDrawer';
 import { ExportModal } from '../components/ExportModal';
 import { AdminAccountModal } from '../components/AdminAccountModal';
 import { UploadModal } from '../components/UploadModal';
+import { PayrollComingSoonModal } from '../components/PayrollComingSoonModal';
 
 import {
   AttendancePeriod,
@@ -41,6 +42,7 @@ import {
   AlertCircle,
   UploadCloud,
   ShieldCheck,
+  Banknote,
 } from 'lucide-react';
 
 interface HistoryState {
@@ -80,6 +82,7 @@ export default function AttendanceConverterPage() {
   const [isAdminAccountModalOpen, setIsAdminAccountModalOpen] = useState(false);
   const [isReviewDrawerOpen, setIsReviewDrawerOpen] = useState(false);
   const [isExportModalOpen, setIsExportModalOpen] = useState(false);
+  const [isPayrollModalOpen, setIsPayrollModalOpen] = useState(false);
 
   // Active view tab for Admin: Grid vs Summary
   const [activeTab, setActiveTab] = useState<'grid' | 'summary'>('grid');
@@ -223,13 +226,35 @@ export default function AttendanceConverterPage() {
 
   // Update cell status
   const handleCellStatusChange = useCallback(
-    (employeeId: string, dateKey: string, newStatus: StatusCode, edValue?: number) => {
+    (
+      employeeId: string,
+      dateKey: string,
+      newStatus: StatusCode,
+      edValue?: number,
+      updatedPunches?: { punchIn?: string; punchOut?: string; durationHours?: number }
+    ) => {
       setEmployees((prev) => {
         setHistory((h) => [...h.slice(-15), { employees: prev }]);
         return prev.map((emp) => {
           if (emp.id !== employeeId) return emp;
           const currentCell = emp.attendance[dateKey];
           if (!currentCell) return emp;
+
+          let newPunches = currentCell.punches;
+          if (updatedPunches) {
+            const inTime = updatedPunches.punchIn ?? currentCell.punches.punchIn;
+            const outTime = updatedPunches.punchOut ?? currentCell.punches.punchOut;
+            const allPunches = [inTime, outTime].filter(Boolean) as string[];
+            newPunches = {
+              ...currentCell.punches,
+              punchIn: inTime,
+              punchOut: outTime,
+              allPunches,
+              durationHours: updatedPunches.durationHours ?? currentCell.punches.durationHours,
+              rawText: allPunches.join('\n'),
+            };
+          }
+
           return {
             ...emp,
             attendance: {
@@ -242,6 +267,7 @@ export default function AttendanceConverterPage() {
                 isModified: true,
                 isCustomModified: true,
                 isReview: false,
+                punches: newPunches,
               },
             },
           };
@@ -368,9 +394,10 @@ export default function AttendanceConverterPage() {
     employeeId: string,
     dateKey: string,
     resolution: StatusCode,
-    edValue?: number
+    edValue?: number,
+    updatedPunches?: { punchIn?: string; punchOut?: string; durationHours?: number }
   ) => {
-    handleCellStatusChange(employeeId, dateKey, resolution, edValue);
+    handleCellStatusChange(employeeId, dateKey, resolution, edValue, updatedPunches);
   };
 
   const handleResolveAllAs = (resolution: StatusCode) => {
@@ -455,6 +482,7 @@ export default function AttendanceConverterPage() {
         onOpenEmployeeSettings={() => setIsEmployeeSettingsOpen(true)}
         onOpenAttendanceSettings={() => setIsAttendanceSettingsOpen(true)}
         onOpenAccountSettings={() => setIsAdminAccountModalOpen(true)}
+        onOpenPayroll={() => setIsPayrollModalOpen(true)}
         onResetAll={period ? handleResetAll : undefined}
         hasData={!!period}
         onExportClick={handleDirectDownload}
@@ -596,6 +624,18 @@ export default function AttendanceConverterPage() {
                     <Calculator className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-600 dark:text-blue-400" />
                     <span>Monthly Summary</span>
                   </button>
+
+                  <button
+                    onClick={() => setIsPayrollModalOpen(true)}
+                    className="inline-flex items-center space-x-1.5 sm:space-x-2 px-3 sm:px-3.5 py-1.5 sm:py-2 rounded-lg text-xs font-bold transition cursor-pointer text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white group"
+                    title="Automated Payroll & Salary Engine"
+                  >
+                    <Banknote className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-500 group-hover:scale-110 transition-transform" />
+                    <span>Payroll</span>
+                    <span className="text-[9px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-300 font-extrabold uppercase border border-emerald-500/30">
+                      Soon
+                    </span>
+                  </button>
                 </div>
 
                 {/* Action Buttons */}
@@ -695,6 +735,11 @@ export default function AttendanceConverterPage() {
         isProcessing={isProcessing}
         processingStatusText={processingStatus}
         errorMessage={errorMessage}
+      />
+
+      <PayrollComingSoonModal
+        isOpen={isPayrollModalOpen}
+        onClose={() => setIsPayrollModalOpen(false)}
       />
 
       {period && (
