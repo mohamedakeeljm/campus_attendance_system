@@ -561,85 +561,90 @@ export const AttendanceGrid: React.FC<AttendanceGridProps> = ({
               )}
 
               <div>
-                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-wider mb-2">
-                  Change Status To:
-                </p>
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-[10px] uppercase font-bold text-slate-500 tracking-wider">
+                    Update Day Status:
+                  </p>
+                  <span className="text-[9px] text-blue-600 font-semibold">
+                    Auto-updates Excel &amp; Summary
+                  </span>
+                </div>
                 <div className="grid grid-cols-2 gap-1.5">
                   <button
                     onClick={() => handleSelectStatus('P')}
-                    className="px-2.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 flex items-center justify-between text-left active:scale-95 transition"
+                    className="px-2.5 py-2 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-800 font-bold border border-emerald-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
                   >
                     <span>P</span>
-                    <span className="text-[10px] font-normal text-emerald-600">Present</span>
+                    <span className="text-[10px] font-normal text-emerald-700">Present (8:45-5:00)</span>
                   </button>
 
                   <button
                     onClick={() => handleSelectStatus('HD')}
-                    className="px-2.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 flex items-center justify-between text-left active:scale-95 transition"
+                    className="px-2.5 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 text-amber-800 font-bold border border-amber-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
                   >
                     <span>HD</span>
-                    <span className="text-[10px] font-normal text-amber-600">Half Day</span>
+                    <span className="text-[10px] font-normal text-amber-700">Half Day (1:00)</span>
                   </button>
 
                   <button
                     onClick={() => handleSelectStatus('C')}
-                    className="px-2.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 font-bold border border-rose-200 flex items-center justify-between text-left active:scale-95 transition"
+                    className="px-2.5 py-2 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-800 font-bold border border-rose-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
                   >
                     <span>C</span>
-                    <span className="text-[10px] font-normal text-rose-600">Casual</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleSelectStatus('H')}
-                    className="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300 flex items-center justify-between text-left active:scale-95 transition"
-                  >
-                    <span>H</span>
-                    <span className="text-[10px] font-normal text-slate-500">Holiday</span>
-                  </button>
-
-                  <button
-                    onClick={() => handleSelectStatus('W')}
-                    className="px-2.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold border border-blue-200 flex items-center justify-between text-left active:scale-95 transition"
-                  >
-                    <span>W</span>
-                    <span className="text-[10px] font-normal text-blue-600">WFH</span>
+                    <span className="text-[10px] font-normal text-rose-700">Casual / Leave</span>
                   </button>
 
                   <button
                     onClick={() => handleSelectStatus('M')}
-                    className="px-2.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-bold border border-purple-200 flex items-center justify-between text-left active:scale-95 transition"
+                    className="px-2.5 py-2 rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-800 font-bold border border-purple-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
                   >
                     <span>M</span>
-                    <span className="text-[10px] font-normal text-purple-600">Medical</span>
+                    <span className="text-[10px] font-normal text-purple-700">Medical Leave</span>
                   </button>
 
                   <button
-                    onClick={() => handleSelectStatus('PH')}
-                    className="px-2.5 py-2 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold border border-indigo-200 flex items-center justify-between text-left active:scale-95 transition"
+                    onClick={() => handleSelectStatus('W')}
+                    className="px-2.5 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-800 font-bold border border-blue-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
                   >
-                    <span>PH</span>
-                    <span className="text-[10px] font-normal text-indigo-600">Public Holiday</span>
+                    <span>W</span>
+                    <span className="text-[10px] font-normal text-blue-700">WFH (Work From Home)</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleSelectStatus('H')}
+                    className="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold border border-slate-300 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
+                  >
+                    <span>H</span>
+                    <span className="text-[10px] font-normal text-slate-600">Holiday / Off</span>
                   </button>
 
                   <button
                     onClick={() => handleSelectStatus('ED', 1.0)}
-                    className="px-2.5 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold border border-teal-200 flex items-center justify-between text-left active:scale-95 transition"
+                    className="px-2.5 py-2 rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold border border-teal-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
                   >
                     <span>ED</span>
-                    <span className="text-[10px] font-normal text-teal-600">Extra Day (1.0)</span>
+                    <span className="text-[10px] font-normal text-teal-700">Extra Day (1.0)</span>
                   </button>
 
                   <button
                     onClick={() => handleSelectStatus('EH', 0.5)}
-                    className="px-2.5 py-2 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold border border-cyan-200 flex items-center justify-between text-left active:scale-95 transition"
+                    className="px-2.5 py-2 rounded-xl bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold border border-cyan-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
                   >
                     <span>EH</span>
-                    <span className="text-[10px] font-normal text-cyan-600">Extra Half (0.5)</span>
+                    <span className="text-[10px] font-normal text-cyan-700">Extra Half (0.5)</span>
+                  </button>
+
+                  <button
+                    onClick={() => handleSelectStatus('PH')}
+                    className="col-span-2 px-2.5 py-1.5 rounded-xl bg-indigo-50 hover:bg-indigo-100 text-indigo-800 font-bold border border-indigo-200 flex items-center justify-between text-left active:scale-95 transition cursor-pointer"
+                  >
+                    <span>PH</span>
+                    <span className="text-[10px] font-normal text-indigo-700">Public Holiday</span>
                   </button>
 
                   <button
                     onClick={() => handleSelectStatus('')}
-                    className="col-span-2 px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center space-x-1"
+                    className="col-span-2 px-2.5 py-1.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-500 border border-slate-200 flex items-center justify-center space-x-1 cursor-pointer"
                   >
                     <span>Blank (Before join date / Inactive)</span>
                   </button>

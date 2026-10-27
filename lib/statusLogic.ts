@@ -103,17 +103,61 @@ export function determineDailyStatus(params: DetermineStatusParams): StatusResul
 
   // 3. Employee punched in on a regular working day
   if (hasPunches) {
+    const toMinutes = (timeStr: string) => {
+      const [h, m] = timeStr.split(':').map(Number);
+      return h * 60 + m;
+    };
+
+    const inMin = punches.punchIn ? toMinutes(punches.punchIn) : null;
+    const outMin = punches.punchOut ? toMinutes(punches.punchOut) : null;
+
+    // Time boundaries in minutes from midnight:
+    // 08:45 AM = 525 min (allow up to 08:55 min [535 min] grace)
+    // 01:00 PM = 780 min (13:00)
+    // 05:00 PM = 1020 min (17:00)
+
     // Only 1 punch recorded -> Ambiguous (Review)
     if (punches.allPunches.length === 1) {
+      const isMorning = inMin !== null && inMin <= 540;
       return {
-        status: 'P',
+        status: isMorning ? 'P' : 'HD',
         isReview: true,
-        reviewReason: `Only punch-in at ${punches.punchIn} recorded (missing clock-out). Verify if Full Day or Half Day.`,
+        reviewReason: `Only single punch at ${punches.punchIn} recorded (missing punch). Please verify if Full Day (P) or Half Day (HD).`,
         edValue: 0,
       };
     }
 
-    // Full day threshold met
+    // Rule A: Morning Half Day (HD)
+    // Checked in by 08:45 AM (<= 540 min) and checked out around 01:00 PM (12:30 - 14:00 [750 - 840 min])
+    if (inMin !== null && inMin <= 540 && outMin !== null && outMin >= 735 && outMin < 960) {
+      return {
+        status: 'HD',
+        isReview: false,
+        edValue: 0,
+      };
+    }
+
+    // Rule B: Afternoon Half Day (HD)
+    // Checked in around 01:00 PM (12:00 - 13:30 [720 - 810 min]) and checked out at or after 05:00 PM (>= 1010 min)
+    if (inMin !== null && inMin >= 710 && inMin <= 820 && outMin !== null && outMin >= 1010) {
+      return {
+        status: 'HD',
+        isReview: false,
+        edValue: 0,
+      };
+    }
+
+    // Rule C: Full Day Present (P)
+    // Checked in by 08:45 AM (<= 535 min) and checked out at or after 05:00 PM (>= 1010 min) OR worked duration >= 7.5 hours
+    if ((inMin !== null && inMin <= 535 && outMin !== null && outMin >= 1010) || punches.durationHours >= 7.5) {
+      return {
+        status: 'P',
+        isReview: false,
+        edValue: 0,
+      };
+    }
+
+    // Rule D: Standard duration-based fallbacks
     if (punches.durationHours >= settings.fullDayMinimumHours) {
       return {
         status: 'P',
@@ -122,7 +166,6 @@ export function determineDailyStatus(params: DetermineStatusParams): StatusResul
       };
     }
 
-    // Half day threshold met
     if (punches.durationHours >= settings.halfDayMinimumHours) {
       return {
         status: 'HD',
@@ -135,12 +178,12 @@ export function determineDailyStatus(params: DetermineStatusParams): StatusResul
     return {
       status: 'HD',
       isReview: true,
-      reviewReason: `Worked duration ${punches.durationHours}h is below minimum half-day threshold (${settings.halfDayMinimumHours}h). Review status.`,
+      reviewReason: `Worked duration ${punches.durationHours}h (${punches.punchIn} - ${punches.punchOut}) is below minimum half-day threshold (${settings.halfDayMinimumHours}h). Review status.`,
       edValue: 0,
     };
   }
 
-  // 4. No punches recorded
+  // 4. No punches recorded on this day
   // If it's a scheduled off-day or company holiday -> Holiday (H)
   if (isScheduledOffDay || isCompanyHoliday) {
     return {
@@ -150,7 +193,8 @@ export function determineDailyStatus(params: DetermineStatusParams): StatusResul
     };
   }
 
-  // Scheduled working day with no punches -> Casual / Absent (C)
+  // Scheduled working day with no punches -> Absent / Casual Leave (C)
+  // Miss (Admin) can click this cell and update it to M (Medical), W (WFH), or C (Casual Leave)
   return {
     status: 'C',
     isReview: false,
