@@ -14,6 +14,7 @@ import {
   Clock,
   ArrowRight,
   Bell,
+  Construction,
 } from 'lucide-react';
 
 interface PayrollComingSoonModalProps {
@@ -47,42 +48,50 @@ export const PayrollComingSoonModal: React.FC<PayrollComingSoonModalProps> = ({
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-xl bg-slate-200/60 dark:bg-slate-800/60 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition cursor-pointer"
+          className="absolute top-4 right-4 sm:top-5 sm:right-5 p-2 rounded-xl bg-slate-200/70 dark:bg-slate-800/70 hover:bg-slate-300 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white transition cursor-pointer z-20"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
         </button>
 
         {/* Content Container */}
-        <div className="flex flex-col items-center text-center space-y-5 relative z-10">
+        <div className="flex flex-col items-center text-center space-y-4 sm:space-y-5 relative z-10">
           {/* Animated Floating Icon Capsule */}
           <div className="relative group">
             {/* Outer Glow Halo */}
-            <div className="absolute -inset-2 bg-gradient-to-r from-blue-600 via-emerald-500 to-indigo-600 rounded-3xl blur-lg opacity-70 group-hover:opacity-100 transition duration-500 animate-pulse-glow" />
+            <div className="absolute -inset-3 bg-gradient-to-r from-blue-600 via-emerald-500 to-indigo-600 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition duration-500 animate-pulse-glow" />
 
             {/* Inner Floating Icon Box */}
-            <div className="relative w-20 h-20 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border-2 border-white/30 flex items-center justify-center shadow-2xl animate-float">
-              <Banknote className="w-10 h-10 text-emerald-400" />
-              <div className="absolute -top-1 -right-1 p-1 bg-blue-600 rounded-full border border-white/40 shadow-xs">
-                <Sparkles className="w-3.5 h-3.5 text-amber-300" />
+            <div className="relative w-20 h-20 sm:w-22 sm:h-22 rounded-2xl bg-gradient-to-br from-slate-900 to-slate-800 border-2 border-white/40 flex items-center justify-center shadow-2xl animate-float">
+              <Banknote className="w-10 h-10 sm:w-11 sm:h-11 text-emerald-400" />
+              <div className="absolute -top-1.5 -right-1.5 p-1 bg-blue-600 rounded-full border border-white/40 shadow-xs">
+                <Sparkles className="w-4 h-4 text-amber-300" />
               </div>
             </div>
           </div>
 
-          {/* Status Badge */}
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 text-xs font-bold tracking-wide uppercase shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
-            <span>Under Active Development</span>
-            <span className="text-slate-400 dark:text-slate-500">•</span>
-            <span>Coming Soon</span>
-          </div>
+          {/* Big, Clear & Prominent Hero Title Section */}
+          <div className="space-y-1.5 max-w-xl">
+            {/* Pulsing Pill Tag */}
+            <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-700 dark:text-emerald-300 text-[11px] sm:text-xs font-black tracking-wider uppercase shadow-xs">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-ping" />
+              <span>UNDER ACTIVE DEVELOPMENT</span>
+            </div>
 
-          {/* Title & Subtitle */}
-          <div className="space-y-2 max-w-lg">
-            <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight bg-gradient-to-r from-slate-900 via-blue-700 to-indigo-900 dark:from-white dark:via-blue-200 dark:to-emerald-300 bg-clip-text text-transparent">
-              Automated Payroll &amp; Salary Engine
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
+            {/* Huge, Bold "COMING SOON" */}
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-widest uppercase bg-gradient-to-r from-blue-700 via-indigo-600 to-emerald-600 dark:from-blue-400 dark:via-indigo-300 dark:to-emerald-300 bg-clip-text text-transparent drop-shadow-sm select-none py-1">
+              COMING SOON
+            </h1>
+
+            {/* Feature Sub-Title */}
+            <div className="flex items-center justify-center space-x-2 text-slate-800 dark:text-slate-100 font-extrabold text-sm sm:text-base">
+              <span className="px-2 py-0.5 rounded-lg bg-blue-500/10 dark:bg-blue-500/20 text-blue-700 dark:text-blue-300 border border-blue-500/30">
+                Automated Payroll &amp; Salary Engine
+              </span>
+            </div>
+
+            {/* Clear explanatory description */}
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed font-medium pt-1">
               We are finalizing the automated salary calculation engine for Brainiacs Campus.
               This module will seamlessly connect with your daily biometric punch records to
               compute exact worked days, allowances, and statutory deductions.
