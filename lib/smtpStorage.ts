@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 
 export interface SavedSmtpConfig {
   host: string;
@@ -11,7 +12,9 @@ export interface SavedSmtpConfig {
   adminEmail: string;
 }
 
-const DATA_DIR = path.join(process.cwd(), 'data');
+const DATA_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), 'data')
+  : path.join(process.cwd(), 'data');
 const SMTP_CONFIG_FILE = path.join(DATA_DIR, 'smtp-config.json');
 
 export const DEFAULT_SMTP_CONFIG: SavedSmtpConfig = {
@@ -52,7 +55,7 @@ export function getSavedSmtpConfig(): SavedSmtpConfig {
     port: parseInt(process.env.SMTP_PORT || '465', 10),
     secure: process.env.SMTP_SECURE === 'true' || process.env.SMTP_PORT === '465',
     user: process.env.SMTP_USER || DEFAULT_SMTP_CONFIG.user,
-    pass: process.env.SMTP_PASS || '',
+    pass: (process.env.SMTP_PASS || '').replace(/\s+/g, '').trim(),
     from: process.env.SMTP_FROM || `"Brainiacs Campus Admin" <${process.env.SMTP_USER || DEFAULT_SMTP_CONFIG.user}>`,
     adminEmail: process.env.ADMIN_EMAIL || process.env.SMTP_USER || DEFAULT_SMTP_CONFIG.adminEmail,
   };
@@ -69,8 +72,8 @@ export function saveSmtpConfig(config: Partial<SavedSmtpConfig>): SavedSmtpConfi
     port: config.port ? Number(config.port) : current.port,
     secure: config.secure !== undefined ? Boolean(config.secure) : (Number(config.port || current.port) === 465),
     user: config.user?.trim() || current.user,
-    // Preserve existing password if not provided or left blank
-    pass: config.pass !== undefined && config.pass !== '' ? config.pass.trim() : current.pass,
+    // Preserve existing password if not provided or left blank, and strip spaces
+    pass: config.pass !== undefined && config.pass !== '' ? config.pass.replace(/\s+/g, '').trim() : current.pass,
     from: config.from?.trim() || `"Brainiacs Campus Admin" <${config.user?.trim() || current.user}>`,
     adminEmail: config.adminEmail?.trim() || config.user?.trim() || current.adminEmail,
   };

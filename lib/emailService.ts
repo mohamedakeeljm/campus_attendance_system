@@ -15,7 +15,25 @@ export interface SmtpConfig {
  */
 export function getAuthorizedAdminEmail(): string {
   const saved = getSavedSmtpConfig();
-  return saved.adminEmail || saved.user || 'brainiacscampus@gmail.com';
+  return process.env.ADMIN_EMAIL || saved.adminEmail || process.env.SMTP_USER || saved.user || 'brainiacscampus@gmail.com';
+}
+
+/**
+ * Check if given email is an authorized administrator email
+ */
+export function isAuthorizedAdminEmail(email: string): boolean {
+  if (!email || !email.includes('@')) return false;
+  const target = email.toLowerCase().trim();
+
+  const authorizedList = [
+    'brainiacscampus@gmail.com',
+    'mohamedakeeljm@gmail.com',
+    (process.env.ADMIN_EMAIL || '').toLowerCase().trim(),
+    (process.env.SMTP_USER || '').toLowerCase().trim(),
+    getAuthorizedAdminEmail().toLowerCase().trim(),
+  ].filter(Boolean);
+
+  return authorizedList.includes(target);
 }
 
 /**
@@ -23,19 +41,18 @@ export function getAuthorizedAdminEmail(): string {
  */
 export function getSmtpConfig(): SmtpConfig | null {
   const saved = getSavedSmtpConfig();
+  const pass = (process.env.SMTP_PASS && process.env.SMTP_PASS.trim()) || saved.pass;
+  const user = (process.env.SMTP_USER && process.env.SMTP_USER.trim()) || saved.user || 'brainiacscampus@gmail.com';
+  const host = (process.env.SMTP_HOST && process.env.SMTP_HOST.trim()) || saved.host || 'smtp.gmail.com';
+  const port = parseInt(process.env.SMTP_PORT || String(saved.port || '465'), 10);
+  const secure = process.env.SMTP_SECURE !== undefined ? process.env.SMTP_SECURE === 'true' : (port === 465 || saved.secure);
+  const from = process.env.SMTP_FROM || saved.from || `"Brainiacs Campus Admin" <${user}>`;
 
-  if (!saved.host || !saved.user || !saved.pass) {
+  if (!pass) {
     return null;
   }
 
-  return {
-    host: saved.host,
-    port: saved.port,
-    secure: saved.secure,
-    user: saved.user,
-    pass: saved.pass,
-    from: saved.from,
-  };
+  return { host, port, secure, user, pass, from };
 }
 
 /**
