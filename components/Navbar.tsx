@@ -32,11 +32,11 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-16 gap-2">
           {/* Logo & Brand */}
           <div className="flex items-center space-x-2.5 sm:space-x-3 min-w-0">
-            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-full overflow-hidden shadow-lg ring-2 ring-blue-500/40 shrink-0 bg-white flex items-center justify-center">
+            <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl overflow-hidden shadow-lg ring-2 ring-blue-500/40 shrink-0 bg-white flex items-center justify-center p-0.5">
               <img
-                src="/logo.jpg"
+                src="/logo.png"
                 alt="Brainiacs Campus Logo"
-                className="w-full h-full object-cover scale-105"
+                className="w-full h-full object-contain"
               />
             </div>
             <div className="min-w-0">

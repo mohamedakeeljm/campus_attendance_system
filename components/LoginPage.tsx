@@ -194,11 +194,11 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
       <div className="w-full max-w-sm sm:max-w-md liquid-glass rounded-3xl shadow-2xl overflow-hidden transition-all duration-300 border border-white/20 dark:border-white/10">
         {/* Top Header: Logo & Branding */}
         <div className="px-6 pt-6 pb-4 text-center border-b border-white/20 dark:border-white/10">
-          <div className="w-14 h-14 mx-auto rounded-full p-0.5 bg-white shadow-md ring-2 ring-blue-500/30 mb-2.5 flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto rounded-2xl p-1 bg-white shadow-md ring-2 ring-blue-500/30 mb-2.5 flex items-center justify-center">
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               alt="Brainiacs Campus Logo"
-              className="w-full h-full object-cover rounded-full"
+              className="w-full h-full object-contain"
             />
           </div>
           <h1 className="text-xl font-black text-slate-900 dark:text-white tracking-tight leading-tight">

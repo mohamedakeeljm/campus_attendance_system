@@ -52,11 +52,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Top: Logo & Branding */}
       <div className="space-y-2.5">
         <div className="flex items-center space-x-2.5 px-1 py-0.5">
-          <div className="w-8 h-8 rounded-xl overflow-hidden shadow-md ring-1 ring-blue-500/40 shrink-0 bg-white flex items-center justify-center p-0.5">
+          <div className="w-9 h-9 rounded-xl overflow-hidden shadow-md ring-1 ring-blue-500/40 shrink-0 bg-white flex items-center justify-center p-0.5">
             <img
-              src="/logo.jpg"
+              src="/logo.png"
               alt="Brainiacs Campus Logo"
-              className="w-full h-full object-cover rounded-lg"
+              className="w-full h-full object-contain rounded-lg"
             />
           </div>
           <div className="min-w-0">
@@ -293,8 +293,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="w-8 h-8 rounded-full overflow-hidden bg-white shrink-0 shadow-xs">
-            <img src="/logo.jpg" alt="Logo" className="w-full h-full object-cover" />
+          <div className="w-9 h-9 rounded-full overflow-hidden bg-white shrink-0 shadow-xs flex items-center justify-center p-0.5">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <span className="font-extrabold text-sm text-white truncate">Brainiacs Campus</span>
         </div>

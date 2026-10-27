@@ -5,7 +5,13 @@ export const metadata: Metadata = {
   title: 'Attendance Converter - Brainiacs Campus',
   description: 'Convert biometric attendance reports into the Brainiacs monthly attendance format.',
   icons: {
-    icon: '/logo.jpg',
+    icon: [
+      { url: '/logo.png', type: 'image/png' },
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/logo.jpg' },
+    ],
+    shortcut: '/logo.png',
+    apple: '/logo.png',
   },
 };
 

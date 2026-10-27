@@ -115,11 +115,11 @@ export const FileUploadZone: React.FC<FileUploadZoneProps> = ({
     <div className="max-w-4xl mx-auto space-y-6">
       {/* Top Banner & Logo */}
       <div className="text-center space-y-3 flex flex-col items-center">
-        <div className="w-20 h-20 rounded-full overflow-hidden shadow-xl ring-4 ring-blue-500/20 bg-white p-0.5">
+        <div className="w-20 h-20 rounded-2xl overflow-hidden shadow-xl ring-4 ring-blue-500/20 bg-white p-1 flex items-center justify-center">
           <img
-            src="/logo.jpg"
+            src="/logo.png"
             alt="Brainiacs Campus Logo"
-            className="w-full h-full object-cover rounded-full"
+            className="w-full h-full object-contain"
           />
         </div>
         <div className="space-y-1">
