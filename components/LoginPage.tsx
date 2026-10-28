@@ -309,6 +309,20 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLoginSuccess }) => {
                 <span>{isLoading ? 'Signing In...' : 'Sign In as Admin'}</span>
                 <ArrowRight className="w-4 h-4" />
               </button>
+
+              {/* Demo Helper Pill for Live Demo Evaluation */}
+              <div className="pt-1.5 flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setUsername('admin');
+                    setPassword('admin123');
+                  }}
+                  className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-[11px] font-bold border border-blue-500/20 transition cursor-pointer"
+                >
+                  <span>⚡ Fill Demo Login (admin / admin123)</span>
+                </button>
+              </div>
             </form>
           ) : forgotStep === 1 ? (
             /* --- Forgot Password Step 1: Enter Registered Admin Email --- */

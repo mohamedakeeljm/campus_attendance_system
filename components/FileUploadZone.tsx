@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useRef, useState, useCallback } from 'react';
-import { UploadCloud, FileSpreadsheet, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight, FilePlus2, X } from 'lucide-react';
+import { UploadCloud, FileSpreadsheet, CheckCircle2, AlertTriangle, ShieldCheck, ArrowRight, FilePlus2, X, Download } from 'lucide-react';
 
 interface FileUploadZoneProps {
   onProcessFiles: (biometricFile: File, previousWorkbookFile?: File | null) => void;
@@ -38,6 +38,22 @@ export const FileUploadZone: React.FC<FileUploadZoneProps> = ({
       return;
     }
     setBiometricFile(file);
+  };
+
+  // Load sample biometric file for instant live demo testing
+  const handleLoadSampleData = async () => {
+    try {
+      setLocalError(null);
+      const res = await fetch('/sample-biometric.xlsx');
+      if (!res.ok) throw new Error('Sample biometric file not found');
+      const blob = await res.blob();
+      const file = new File([blob], 'Brainiacs_Sample_Biometric.xlsx', {
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      });
+      handleSetBiometricFile(file);
+    } catch (e: any) {
+      setLocalError('Failed to load sample demo data: ' + e.message);
+    }
   };
 
   // Validate previous workbook file extension
@@ -281,6 +297,25 @@ export const FileUploadZone: React.FC<FileUploadZoneProps> = ({
             )}
           </div>
         </div>
+      </div>
+
+      {/* Live Demo Quick Sample Loader Pill */}
+      <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
+        <button
+          type="button"
+          onClick={handleLoadSampleData}
+          className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-700 dark:text-blue-300 text-xs font-bold border border-blue-500/30 transition cursor-pointer shadow-xs active:scale-95"
+        >
+          <span>⚡ Load Sample Biometric Data (Live Demo)</span>
+        </button>
+        <a
+          href="/sample-biometric.xlsx"
+          download="Brainiacs_Sample_Biometric.xlsx"
+          className="inline-flex items-center space-x-1 text-xs text-slate-500 hover:text-blue-600 transition underline underline-offset-2"
+        >
+          <Download className="w-3.5 h-3.5" />
+          <span>Download Sample File (.xlsx)</span>
+        </a>
       </div>
 
       {/* Action CTA & Privacy Note */}
